@@ -20,6 +20,30 @@ jobs:
 
 
 
+    - name: Bump version and push tag
+      run: |
+        # Get the current version
+        VERSION=$(jq -r ".version" ./path-to-your-file.json)
+
+        # Break the version into its components
+        MAJOR=$(echo $VERSION | cut -d. -f1)
+        MINOR=$(echo $VERSION | cut -d. -f2)
+        PATCH=$(echo $VERSION | cut -d. -f3)
+
+        # Increment the patch version
+        NEW_PATCH=$((PATCH + 1))
+        NEW_VERSION="$MAJOR.$MINOR.$NEW_PATCH"
+
+        # Update the version in the JSON file
+        jq ".version = \"$NEW_VERSION\"" ./path-to-your-file.json > tmp.json && mv tmp.json ./path-to-your-file.json
+
+
+
+
+
+
+
+
     - name: Check for changes in elephant.json
       id: check_changes
       run: |
