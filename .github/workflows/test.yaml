@@ -92,6 +92,7 @@ jobs:
 
     - name: Commit and push changes2
       run: |
+        ls
         jq '.version = "'${{ steps.get_tag.outputs.tag }}'"' elephant.json > temp.json && mv temp.json elephant.json
         git config --global user.name 'Helga09'
         git config --global user.email 'olhavashenko@gmail.com'
