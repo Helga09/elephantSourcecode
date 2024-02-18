@@ -50,9 +50,9 @@ jobs:
           jq -r '.results|.[]|.name' | sort -V | tail -n 1)
           IFS='.' read -ra ADDR <<< "$version"
           NEW_PATCH=$((ADDR[2] + 1))
-          version="${ADDR[0]}.${ADDR[1]}.$NEW_PATCH"
+          version_new="${ADDR[0]}.${ADDR[1]}.$NEW_PATCH"
           cat elephant.json
-          echo "::set-output name=tag::$version"
+          echo "::set-output name=tag::$version_new"
         
     - name: Login to Docker Hub
       uses: docker/login-action@v3
@@ -92,8 +92,6 @@ jobs:
 
     - name: Commit and push changes2
       run: |
-        cd ..
-        ls
         jq '.version = "'${{ steps.get_tag.outputs.tag }}'"' elephant.json > temp.json && mv temp.json elephant.json
         git config --global user.name 'Helga09'
         git config --global user.email 'olhavashenko@gmail.com'
