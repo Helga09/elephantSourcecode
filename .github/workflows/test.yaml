@@ -25,12 +25,12 @@ jobs:
           echo "::set-output name=changes::false"
         fi
     
-    - name: read version from elephant.json or get latest tag
+    - name: Read version from elephant.json or get latest tag
       id: get_tag
       run: |
-        if [ ${{ steps.check_changes.outputs.changes }} == "true" ]; then
+        if [ "${{ steps.check_changes.outputs.changes }}" == "true" ]; then
           json=$(cat elephant.json)
-          version=$(echo $json | jq -r '.version')
+          version=$(echo "$json" | jq -r '.version')
         else
           TAG=$(curl -s "https://registry.hub.docker.com/v2/repositories/${{ secrets.DOCKERHUB_USERNAME }}/elephant/tags?page_size=1024" | \
           jq -r '.results|.[]|.name' | sort -V | tail -n 1)
@@ -39,6 +39,7 @@ jobs:
           version="${ADDR[0]}.${ADDR[1]}.$NEW_PATCH"
         fi
         echo "::set-output name=tag::$version"
+
 
     # - name: Check for changes in elephant.json
     #   id: check_changes
