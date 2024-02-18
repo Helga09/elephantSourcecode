@@ -24,6 +24,6 @@ jobs:
       with:
         context: .
         push: true
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/elephant:${{ steps.project_version.outputs.version }}
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/elephant:0.0.2
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_PASSWORD }}
