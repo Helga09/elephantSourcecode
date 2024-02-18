@@ -36,7 +36,7 @@ jobs:
       with:
         repository: Helga09/GitOpsElephant
         path: GitOpsElephant
-        token: ${{ secrets.GIT_PASSWORD }}
+        token: ${{ secrets.GIT_TOKEN }}
 
     - name: Update Docker image tag in elephant.yaml
       run: |
