@@ -20,25 +20,6 @@ jobs:
 
 
 
-    - name: Bump version and push tag
-      run: |
-        # Get the current version
-        VERSION=$(jq -r ".version" ./elephant.json)
-
-        # Break the version into its components
-        MAJOR=$(echo $VERSION | cut -d. -f1)
-        MINOR=$(echo $VERSION | cut -d. -f2)
-        PATCH=$(echo $VERSION | cut -d. -f3)
-
-        # Increment the patch version
-        NEW_PATCH=$((PATCH + 1))
-        NEW_VERSION="$MAJOR.$MINOR.$NEW_PATCH"
-
-        # Update the version in the JSON file
-        jq ".version = \"$NEW_VERSION\"" ./elephant.json > tmp.json && mv tmp.json ./elephant.json
-
-
-
 
 
 
