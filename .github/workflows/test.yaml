@@ -24,15 +24,11 @@ jobs:
     #     else
     #       echo "::set-output name=changes::false"
     #     fi
-    - name: Get previous version (alternative approach)
+    - name: Get previous version (tag approach)
       id: get_previous_version
       run: |
-        # Fetch only the latest tag if available
-        git fetch --depth=1 origin HEAD@{tag} || true
-        # If no tag available, fetch previous commit
-        git fetch --depth=1 origin HEAD~1 || true
-        # Extract version from commit message or fallback to "unknown"
-        echo "::set-output name=version::$(git show -s --format='%B' origin/HEAD@{1} | jq -r '.version' || echo '0.7.0')"
+        git fetch origin --tags -n 1
+        echo "::set-output name=version::$(git show -s --format='%B' origin/HEAD@{1} | jq -r '.version' || echo '0.2.0')"
 
     - name: Get current version
       id: get_current_version
