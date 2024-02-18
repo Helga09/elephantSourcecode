@@ -40,6 +40,8 @@ jobs:
 
     - name: Update Docker image tag in elephant.yaml
       run: |
+        ls
+        pwd
         sed -i 's|image: helga09/elephant:.*|image: helga09/elephant:${{ steps.project_version.outputs.version }}|' GitOpsElephant/my-app/elephant.yaml
 
     - name: Commit and push changes
