@@ -24,21 +24,19 @@ jobs:
     #     else
     #       echo "::set-output name=changes::false"
     #     fi
-    - name: Get previous version (alternative approach)
+    - name: Get previous version
       id: get_previous_version
       run: |
-        # Fetch only the latest tag if available
-        git fetch --depth=1 origin HEAD@{tag} || true
-        # If no tag available, fetch previous commit
-        git fetch --depth=1 origin HEAD~1 || true
-        # Extract version from commit message or fallback to "unknown"
-        echo "::set-output name=version::$(git show -s --format='%B' origin/HEAD@{1} | jq -r '.version' || echo '0.7.0')"
-
+        # Fetch the previous commit
+        git fetch --depth=2 origin HEAD || true
+        # Extract version from the previous commit or fallback to "unknown"
+        echo "::set-output name=version::$(git show -s --format='%B' HEAD~1 | jq -r '.version' || echo 'unknown')"
+    
     - name: Get current version
       id: get_current_version
       run: |
         echo "::set-output name=version::$(jq -r '.version' elephant.json)"
-
+    
     - name: Compare versions
       run: |
         if [[ "${{ steps.get_previous_version.outputs.version }}" != "${{ steps.get_current_version.outputs.version }}" ]]; then
@@ -46,6 +44,7 @@ jobs:
         else
           echo "elephant.json version is unchanged."
         fi
+
     - name: Notify if elephant.json changed
       if: steps.check_changes.outputs.changes == 'true'
       run: |
