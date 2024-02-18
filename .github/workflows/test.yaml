@@ -24,28 +24,28 @@ jobs:
     #     else
     #       echo "::set-output name=changes::false"
     #     fi
-- name: Get previous version
-  id: get_previous_version
-  run: |
-    # Checkout the previous commit
-    git checkout HEAD~1
-    # Extract version from elephant.json or fallback to "unknown"
-    echo "::set-output name=version::$(jq -r '.version' elephant.json || echo 'unknown')"
-
-- name: Get current version
-  id: get_current_version
-  run: |
-    # Checkout the current commit
-    git checkout HEAD
-    echo "::set-output name=version::$(jq -r '.version' elephant.json)"
-
-- name: Compare versions
-  run: |
-    if [[ "${{ steps.get_previous_version.outputs.version }}" != "${{ steps.get_current_version.outputs.version }}" ]]; then
-      echo "elephant.json version has changed!"
-    else
-      echo "elephant.json version is unchanged."
-    fi
+    - name: Get previous version
+      id: get_previous_version
+      run: |
+        # Checkout the previous commit
+        git checkout HEAD~1
+        # Extract version from elephant.json or fallback to "unknown"
+        echo "::set-output name=version::$(jq -r '.version' elephant.json || echo 'unknown')"
+    
+    - name: Get current version
+      id: get_current_version
+      run: |
+        # Checkout the current commit
+        git checkout HEAD
+        echo "::set-output name=version::$(jq -r '.version' elephant.json)"
+    
+    - name: Compare versions
+      run: |
+        if [[ "${{ steps.get_previous_version.outputs.version }}" != "${{ steps.get_current_version.outputs.version }}" ]]; then
+          echo "elephant.json version has changed!"
+        else
+          echo "elephant.json version is unchanged."
+        fi
 
     - name: Notify if elephant.json changed
       if: steps.check_changes.outputs.changes == 'true'
