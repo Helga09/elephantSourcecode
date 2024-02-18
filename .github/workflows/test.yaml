@@ -15,4 +15,7 @@ jobs:
 
     - name: Read version from elephant.json
       id: project_version
-      run: cat elephant.json | grep version | head -1 | awk -F: '{ print $2 }' | sed 's/[",]//g' | tr -d '[[:space:]]' 
+      run: |
+        json=$(cat elephant.json)
+        version=$(echo $json | grep -oP '"version": "\K(.*?)(?=")')
+        echo "PROJECT_VERSION=$version" >> $GITHUB_ENV
