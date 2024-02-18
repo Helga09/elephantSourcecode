@@ -51,7 +51,7 @@ jobs:
           echo $version
           TAG=$(curl -s "https://registry.hub.docker.com/v2/repositories/${{ secrets.DOCKERHUB_USERNAME }}/elephant/tags?page_size=1024" | \
           jq -r '.results|.[]|.name' | sort -V | tail -n 1)
-          IFS='.' read -ra ADDR <<< "$TAG"
+          IFS='.' read -ra ADDR <<< "$version"
           NEW_PATCH=$((ADDR[2] + 1))
           version="${ADDR[0]}.${ADDR[1]}.$NEW_PATCH"
         fi
