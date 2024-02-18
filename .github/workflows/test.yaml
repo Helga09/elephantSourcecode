@@ -27,8 +27,10 @@ jobs:
     - name: Get previous version
       id: get_previous_version
       run: |
+        # Get the hash of the previous commit
+        PREV_COMMIT=$(git rev-list --max-parents=1 HEAD)
         # Checkout the previous commit
-        git checkout HEAD~1
+        git checkout $PREV_COMMIT || echo "This is the first commit in the branch."
         # Extract version from elephant.json or fallback to "unknown"
         echo "::set-output name=version::$(jq -r '.version' elephant.json || echo 'unknown')"
     
@@ -46,6 +48,7 @@ jobs:
         else
           echo "elephant.json version is unchanged."
         fi
+
 
     - name: Notify if elephant.json changed
       if: steps.check_changes.outputs.changes == 'true'
