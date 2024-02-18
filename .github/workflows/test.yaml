@@ -20,7 +20,7 @@ jobs:
       id: get_tag
       run: |
         json=$(cat elephant.json)
-        version=$(echo $json | grep -op '"version": "\k(.*?)(?=")')
+        version=$(echo $json | grep -oP '"version": "\K(.*?)(?=")')
         TAG=$(curl -s "https://registry.hub.docker.com/v2/repositories/${{ secrets.DOCKERHUB_USERNAME }}/elephant/tags?page_size=1024" | \
         jq -r '.results|.[]|.name' | sort -V | tail -n 1)
         if [ "$version" == "$TAG" ]; then
