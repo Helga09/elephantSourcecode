@@ -14,7 +14,7 @@ jobs:
       uses: actions/checkout@v2
       
     - name: Install jq
-      run: sudo apt-get -y install jq curl git
+      run:  sudo apt-get update && sudo apt-get install -y jq
 
     # - name: Check for changes in elephant.json
     #   id: check_changes
@@ -24,11 +24,15 @@ jobs:
     #     else
     #       echo "::set-output name=changes::false"
     #     fi
-    - name: Get previous version
+    - name: Get previous version (alternative approach)
       id: get_previous_version
       run: |
-        git fetch --depth=1 origin HEAD~1
-        echo "::set-output name=version::$(jq -r '.version' elephant.json)"
+        # Fetch only the latest tag if available
+        git fetch --depth=1 origin HEAD@{tag} || true
+        # If no tag available, fetch previous commit
+        git fetch --depth=1 origin HEAD~1 || true
+        # Extract version from commit message or fallback to "unknown"
+        echo "::set-output name=version::$(git show -s --format='%B' origin/HEAD@{1} | jq -r '.version' || echo 'unknown')"
 
     - name: Get current version
       id: get_current_version
