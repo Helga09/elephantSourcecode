@@ -16,15 +16,23 @@ jobs:
     - name: Install jq
       run: sudo apt-get -y install jq curl git
 
-    - name: Check for changes in elephant.json
-      id: check_changes
+    # - name: Check for changes in elephant.json
+    #   id: check_changes
+    #   run: |
+    #     if [[ $(git diff --name-only ${{ github.event.before }} ${{ github.sha }}) == *"elephant.json"* ]]; then
+    #       echo "::set-output name=changes::true"
+    #     else
+    #       echo "::set-output name=changes::false"
+    #     fi
+    - name: Check if version changed
       run: |
-        if [[ $(git diff --name-only ${{ github.event.before }} ${{ github.sha }}) == *"elephant.json"* ]]; then
-          echo "::set-output name=changes::true"
+        changed=$(git diff HEAD^ HEAD elephant.json | grep 'version' | wc -l)
+        if [ $changed -gt 0 ]; then
+          echo "Version has changed!"
         else
-          echo "::set-output name=changes::false"
+          echo "Version has not changed."
+          exit 1
         fi
-
     - name: Notify if elephant.json changed
       if: steps.check_changes.outputs.changes == 'true'
       run: |
