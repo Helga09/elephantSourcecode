@@ -15,4 +15,4 @@ jobs:
 
     - name: Read version from elephant.json
       id: project_version
-      run: echo "::set-output name=version::$(jq -r '.version' elephant.json)"
+      run: echo "::set-output name=version::$(cat elephant.json | grep version | head -1 | awk -F: '{ print $2 }' | sed 's/[",]//g' | tr -d '[[:space:]]')"
