@@ -5,11 +5,6 @@ on:
     branches:
       - master
 
-
-
-
-
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -25,38 +20,15 @@ jobs:
 
 
 
-    # - name: Check for changes in elephant.json
-    #   id: check_changes
-    #   run: |
-    #     if [[ $(git diff --name-only ${{ github.event.before }} ${{ github.sha }}) == *"elephant.json"* ]]; then
-    #       echo "::set-output name=changes::true"
-    #     else
-    #       echo "::set-output name=changes::false"
-    #     fi
-    - name: Get previous version
-      id: get_previous_version
+    - name: Check for changes in elephant.json
+      id: check_changes
       run: |
-        # Get the hash of the previous commit
-        PREV_COMMIT=$(git rev-list --max-parents=1 HEAD)
-        # Checkout the previous commit
-        git checkout $PREV_COMMIT || echo "This is the first commit in the branch."
-        # Extract version from elephant.json or fallback to "unknown"
-        echo "::set-output name=version::$(jq -r '.version' elephant.json || echo 'unknown')"
-        # Checkout the current commit to restore the state
-        git checkout -
-
-    - name: Get current version
-      id: get_current_version
-      run: |
-        echo "::set-output name=version::$(jq -r '.version' elephant.json)"
-
-    - name: Compare versions
-      run: |
-        if [[ "${{ steps.get_previous_version.outputs.version }}" != "${{ steps.get_current_version.outputs.version }}" ]]; then
-          echo "elephant.json version has changed from ${steps.get_previous_version.outputs.version} to ${steps.get_current_version.outputs.version}!"
+        if [[ $(git diff --name-only ${{ github.event.before }} ${{ github.sha }}) == *"elephant.json"* ]]; then
+          echo "::set-output name=changes::true"
         else
-          echo "elephant.json version is unchanged."
+          echo "::set-output name=changes::false"
         fi
+
 
     - name: Notify if elephant.json changed
       if: steps.check_changes.outputs.changes == 'true'
