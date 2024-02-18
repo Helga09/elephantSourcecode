@@ -17,5 +17,5 @@ jobs:
       id: project_version
       run: |
         json=$(cat elephant.json)
-        version=$(echo $json | grep -oP '"version": "\K(.*?)(?=")')
-        echo "PROJECT_VERSION=$version" >> $GITHUB_ENV
+        $version=$(echo $json | grep -oP '"version": "\K(.*?)(?=")')
+        echo $version
