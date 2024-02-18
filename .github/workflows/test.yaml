@@ -51,7 +51,6 @@ jobs:
           IFS='.' read -ra ADDR <<< "$version"
           NEW_PATCH=$((ADDR[2] + 1))
           version="${ADDR[0]}.${ADDR[1]}.$NEW_PATCH"
-          jq '.version = "'$version'"' elephant.json > temp.json && mv temp.json elephant.json
           cat elephant.json
           echo "::set-output name=tag::$version"
         
@@ -92,6 +91,7 @@ jobs:
         echo ${{ steps.get_tag.outputs.tag }}
         git checkout master
         jq '.version = "'${{ steps.get_tag.outputs.tag }}'"' elephant.json > temp.json && mv temp.json elephant.json
+        cat elephant.json
         git config --global user.name 'Helga09'
         git config --global user.email 'olhavashenko@gmail.com'
         git add .
