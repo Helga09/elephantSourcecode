@@ -13,6 +13,6 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Read version from file
-      id: version
-      run: cat ver.txt
+    - name: Read version from elephant.json
+      id: project_version
+      run: echo "::set-output name=version::$(jq -r '.version' elephant.json)"
