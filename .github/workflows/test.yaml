@@ -17,5 +17,5 @@ jobs:
       id: project_version
       run: |
         json=$(cat elephant.json)
-        $version=$(echo $json | grep -oP '"version": "\K(.*?)(?=")')
+        version=$(echo $json | grep -oP '"version": "\K(.*?)(?=")')
         echo $version
