@@ -54,6 +54,7 @@ jobs:
 
     - name: Commit and push changes
       run: |
+        cd GitOpsElephant
         git config --global user.name 'Helga09'
         git config --global user.email 'olhavashenko@gmail.com'
         git add .
