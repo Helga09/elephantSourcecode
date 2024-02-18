@@ -15,7 +15,4 @@ jobs:
 
     - name: Read version from file
       id: version
-      run: echo "::set-output name=version::$(cat ver.txt)"
-
-    - name: Print version
-      run: echo "Version: ${{ steps.version.outputs.version }}"
+      run: cat ver.txt
