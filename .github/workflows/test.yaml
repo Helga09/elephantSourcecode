@@ -24,16 +24,18 @@ jobs:
     #     else
     #       echo "::set-output name=changes::false"
     #     fi
-    - name: Check if version changed
+    - name: Get latest version
+      id: get_latest_version
       run: |
-        cp elephant.json temp_elephant.json
-        git checkout $GITHUB_SHA -- elephant.json
-        changed=$(diff elephant.json temp_elephant.json | wc -l)
-        if [ $changed -gt 0 ]; then
-          echo "Version has changed!"
-        else
-          echo "Version has not changed."
+        echo "::set-output name=version::$(jq -r '.version' elephant.json)"
+
+    - name: Compare versions
+      run: |
+        if [[ "${{ steps.get_latest_version.outputs.version }}" != "0.1.0" ]]; then
+          echo "elephant.json version has changed!"
           exit 1
+        else
+          echo "elephant.json version is unchanged."
         fi
     - name: Notify if elephant.json changed
       if: steps.check_changes.outputs.changes == 'true'
