@@ -16,31 +16,29 @@ jobs:
     - name: Install jq
       run: sudo apt-get -y install jq curl git
 
-    - name: Check if elephant.json was modified
-      id: check_file
+    - name: Check for changes in elephant.json
+      id: check_changes
       run: |
-        git diff --name-only HEAD~1..HEAD | grep elephant.json
-        if [ $? -eq 0 ]; then
-          echo "::set-output name=modified::true"
+        if [[ $(git diff --name-only ${{ github.sha }}^ ${{ github.sha }} | grep elephant.json) ]]; then
+          echo "::set-output name=changes::true"
         else
-          echo "::set-output name=modified::false"
+          echo "::set-output name=changes::false"
         fi
 
     - name: read version from elephant.json or get latest tag
       id: get_tag
       run: |
-        json=$(cat elephant.json)
-        version=$(echo $json | grep -oP '"version": "\K(.*?)(?=")')
-        TAG=$(curl -s "https://registry.hub.docker.com/v2/repositories/${{ secrets.DOCKERHUB_USERNAME }}/elephant/tags?page_size=1024" | \
-        jq -r '.results|.[]|.name' | sort -V | tail -n 1)
-        if [ "${{ steps.check_file.outputs.modified }}" = "true" ]; then
-          echo "::set-output name=tag::$version"
+        if [ ${{ steps.check_changes.outputs.changes }} == "true" ]; then
+          json=$(cat elephant.json)
+          version=$(echo $json | jq -r '.version')
         else
+          TAG=$(curl -s "https://registry.hub.docker.com/v2/repositories/${{ secrets.DOCKERHUB_USERNAME }}/elephant/tags?page_size=1024" | \
+          jq -r '.results|.[]|.name' | sort -V | tail -n 1)
           IFS='.' read -ra ADDR <<< "$TAG"
           NEW_PATCH=$((ADDR[2] + 1))
           version="${ADDR[0]}.${ADDR[1]}.$NEW_PATCH"
-          echo "::set-output name=tag::$version"
         fi
+        echo "::set-output name=tag::$version"
         
     - name: Login to Docker Hub
       uses: docker/login-action@v3
