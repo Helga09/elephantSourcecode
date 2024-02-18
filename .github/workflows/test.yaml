@@ -23,7 +23,7 @@ jobs:
     - name: Bump version and push tag
       run: |
         # Get the current version
-        VERSION=$(jq -r ".version" ./path-to-your-file.json)
+        VERSION=$(jq -r ".version" ./elephant.json)
 
         # Break the version into its components
         MAJOR=$(echo $VERSION | cut -d. -f1)
