@@ -18,7 +18,7 @@ jobs:
 
     - name: Check for changes in elephant.json
       run: |
-        git diff --name-only HEAD^ HEAD | grep 'elephant.json'
+        git diff --name-only HEAD~1 HEAD | grep 'elephant.json'
         if [ $? -eq 0 ]; then
           echo "elephant.json was modified."
         else
