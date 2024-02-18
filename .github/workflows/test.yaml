@@ -48,6 +48,7 @@ jobs:
         else
           json=$(cat elephant.json)
           version=$(echo $json | jq -r '.version')
+          echo $version
           TAG=$(curl -s "https://registry.hub.docker.com/v2/repositories/${{ secrets.DOCKERHUB_USERNAME }}/elephant/tags?page_size=1024" | \
           jq -r '.results|.[]|.name' | sort -V | tail -n 1)
           IFS='.' read -ra ADDR <<< "$TAG"
