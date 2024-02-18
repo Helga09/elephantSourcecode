@@ -52,7 +52,7 @@ jobs:
       run: |
         ls
         pwd
-        sed -i 's|image: helga09/elephant:.*|image: helga09/elephant:${{ steps.project_version.outputs.version }}|' GitOpsElephant/my-app/elephant.yaml
+        sed -i 's|image: helga09/elephant:.*|image: helga09/elephant:${{ steps.get_tag.outputs.tag }}|' GitOpsElephant/my-app/elephant.yaml
 
     - name: Commit and push changes
       run: |
