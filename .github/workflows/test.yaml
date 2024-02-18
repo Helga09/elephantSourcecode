@@ -1,4 +1,4 @@
-name: Docker Image Release
+name: Update Docker Image Tag
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - master
 
 jobs:
-  build:
+  update:
     runs-on: ubuntu-latest
 
     steps:
@@ -19,31 +19,22 @@ jobs:
         json=$(cat elephant.json)
         version=$(echo $json | grep -oP '"version": "\K(.*?)(?=")')
         echo "::set-output name=version::$version"
-    - name: Login to Docker Hub
-      uses: docker/login-action@v3
+
+    - name: Checkout GitOpsElephant repository
+      uses: actions/checkout@v2
       with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKER_TOKEN }}
-    - name: Build and push Docker image
-      uses: docker/build-push-action@v2
-      with:
-        context: .
-        push: true
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/elephant:${{ steps.project_version.outputs.version }}
+        repository: Helga09/GitOpsElephant
+        path: GitOpsElephant
+        token: ${{ secrets.GIT_PASSWORD }}
 
-    - name: Clone the GitOps repository
-      run: git clone https://github.com/Helga09/GitOpsElephant.git
-
-    - name: Update the version in elephant.yaml
+    - name: Update Docker image tag in elephant.yaml
       run: |
-        # Замінюємо версію в файлі elephant.yaml
-        sed -i 's/helga09\/elephant:0.0.1/helga09\/elephant:${{ env.PROJECT_VERSION }}/g' GitOpsElephant/my-app/elephant.yaml
+        sed -i 's|image: helga09/elephant:.*|image: helga09/elephant:${{ steps.project_version.outputs.version }}|' GitOpsElephant/my-app/elephant.yaml
 
-    - name: Commit and push the changes
+    - name: Commit and push changes
       run: |
-        cd GitOpsElephant
-        git config --global user.email ${{ secrets.GITHUB_USERNAME }}
-        git config --global user.name ${{ secrets.GIT_USERNAME }}
-        git add my-app/elephant.yaml
-        git commit -m "Update the version in elephant.yaml"
+        git config --global user.name 'helga09'
+        git config --global user.email 'olhavashenko@gmail.com'
+        git add .
+        git commit -m "Update Docker image tag to ${{ steps.project_version.outputs.version }}"
         git push
