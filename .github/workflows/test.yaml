@@ -29,15 +29,6 @@ jobs:
       if: steps.check_changes.outputs.changes == 'true'
       run: |
         echo "The elephant.json file has been changed."
-        # Additional actions can be added here if needed
-    # - name: Check for changes in elephant.json
-    #   id: check_changes
-    #   run: |
-    #     if [[ $(git diff --name-only ${{ github.sha }}^ ${{ github.sha }} | grep elephant.json) ]]; then
-    #       echo "::set-output name=changes::true"
-    #     else
-    #       echo "::set-output name=changes::false"
-    #     fi
 
     - name: read version from elephant.json or get latest tag
       id: get_tag
