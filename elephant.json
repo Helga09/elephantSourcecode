@@ -1,13 +1,13 @@
 {
-  "назва проєкту": "Мій Проєкт",
-  "версія проєкту": "1.0.0",
-  "автори": [
+  "project_name": "Elephant",
+  "version": "0.0.1",
+  "authors": [
     {
-      "ім'я": "Автор 1",
-      "email": "author1@example.com"
+      "name": "Olha Vashchenko",
+      "email": "olhavashenko@gmail.com"
     },
     {
-      "ім'я": "Автор 2",
+      "name": "Author 2",
       "email": "author2@example.com"
     }
   ]
