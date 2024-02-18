@@ -26,7 +26,9 @@ jobs:
     #     fi
     - name: Check if version changed
       run: |
-        changed=$(git diff HEAD^ HEAD elephant.json | grep 'version' | wc -l)
+        cp elephant.json temp_elephant.json
+        git checkout HEAD^ -- elephant.json
+        changed=$(diff elephant.json temp_elephant.json | wc -l)
         if [ $changed -gt 0 ]; then
           echo "Version has changed!"
         else
