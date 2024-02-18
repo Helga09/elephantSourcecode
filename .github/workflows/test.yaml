@@ -16,7 +16,7 @@ jobs:
     - name: read version from elephant.json or get latest tag
       id: get_tag
       run: |
-        apt-get install jq
+        sudo apt-get install jq
         json=$(cat elephant.json)
         version=$(echo $json | grep -op '"version": "\k(.*?)(?=")')
         TAG=$(curl -s "https://registry.hub.docker.com/v2/repositories/${{ secrets.DOCKERHUB_USERNAME }}/elephant/tags?page_size=1024" | \
