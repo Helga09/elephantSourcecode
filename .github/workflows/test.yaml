@@ -1,9 +1,11 @@
 name: Docker Image Release
-
 on:
   push:
     branches:
       - master
+    paths-ignore:
+      - 'elephant.json'
+
 
 jobs:
   build:
