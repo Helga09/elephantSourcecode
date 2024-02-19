@@ -37,7 +37,6 @@ jobs:
       run: |
           json=$(cat elephant.json)
           version=$(echo $json | jq -r '.version')
-          jq -r '.results|.[]|.name' | sort -V | tail -n 1)
           IFS='.' read -ra ADDR <<< "$version"
           NEW_PATCH=$((ADDR[2] + 1))
           version_new="${ADDR[0]}.${ADDR[1]}.$NEW_PATCH"
