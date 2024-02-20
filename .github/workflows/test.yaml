@@ -53,7 +53,7 @@ jobs:
     - name: Commit and push changes
       run: |
         cd GitOpsElephant
-        git config --global user.name '${{ secrets.DOCKERHUB_USERNAME }}'
+        git config --global user.name 'helga09'
         git config --global user.email 'olhavashenko@gmail.com'
         git add .
         git commit --allow-empty -m "Update Docker image tag to ${{ steps.project_version.outputs.version }}"
