@@ -37,12 +37,12 @@ jobs:
       with:
         context: .
         push: true
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/elephant:${{ steps.get_tag.outputs.tag }}
+        tags: helga09/elephant:${{ steps.get_tag.outputs.tag }}
 
     - name: Checkout GitOpsElephant repository
       uses: actions/checkout@v2
       with:
-        repository: ${{ secrets.DOCKERHUB_USERNAME }}/GitOpsElephant
+        repository: Helga09/GitOpsElephant
         path: GitOpsElephant
         token: ${{ secrets.GIT_TOKEN }}
 
